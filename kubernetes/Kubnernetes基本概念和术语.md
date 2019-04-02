@@ -16,6 +16,7 @@ Kubernetes集群中，其他节点统称为Node节点。Master和Node可以是�
 
 Node节点可以动态的增加到kubernetes集群中，也就是说，如果我们为一台主机安装完成了Node节点所需要的服务并且正常开启，那么这一台节点可以随时添加到正在运行的kuberntes集群中。
 Node加入到集群中后，节点上的kubelet进程会定时的将Node节点的信息上报到Master节点中。Master节点根据每个Node节点上报的信息，实现均衡的资源调度策略，一旦某个Node节点在规定时间内没有上报信息，则Master节点判断该Node节点出现异常，然后将该Node节点标记为不可用，然后触发`工作负载迁移`的流程。
+在Master节点上，我们可以使用`kubectl get nodes`命令来查看集群中的节点数量及状态，使用`kubectl describe node <node_name>`来查看指定节点的详细信息。
 
 ## Pod
-
+Pod是
