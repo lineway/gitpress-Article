@@ -14,5 +14,5 @@ Kubernetes集群中，其他节点统称为Node节点。Master和Node可以是�
  - kube-proxy:该进程主要负责通信及负载均衡机制；
  - Container Engine:容器引擎，这里可以选择Docker或者kubernetes支持的容器引擎，一般我们选择Docker Engine。
 
-Node节点可以动态的增加到kubernetes集群中，也就是说，如果我们为一台
+Node节点可以动态的增加到kubernetes集群中，也就是说，如果我们为一台主机安装完成了
 
