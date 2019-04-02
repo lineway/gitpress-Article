@@ -32,4 +32,10 @@ Pod可以设置资源限制，用以限制Pod对Node节点上计算资源的使�
 ## Label
 在Kubernetes中，Label(标签)是附加在资源对象上的一个键-值(key=value)对，key和value都由用户定义。Label与我们日常描述的“标签”大体上相同。给资源对象附加上Label有助于用户进行资源分配、调度、配置、部署等管理工作。  
 一个资源对象可以添加任意数量的Label，同样，一个Label也可以附加在任意数量的资源对象上。通过这种方式，可以实现资源的多维度管理工作。给资源对象附加Label可以在资源对象定义时确定，也可以在资源对象创建完成后再动态的添加上去。  
-在给资源对象添加完Label后，我们可以使用Label Selector查询及选择具有某些Label的资源对象，然后再进行更多的操作。目前API支持两种selector表达式：基于等式(equality-based)和基于集合(set-based)。
+在给资源对象添加完Label后，我们可以使用Label Selector查询及选择具有某些Label的资源对象，然后再进行更多的操作。目前API支持两种selector表达式：基于等式(equality-based)和基于集合(set-based)。  
+
+```python
+基于等式的Label Selector
+name = mysql:匹配所有具有Label为name=mysql的资源对象
+environment != development
+```
