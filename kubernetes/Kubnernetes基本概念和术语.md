@@ -9,4 +9,5 @@ kubernetes中的大部分概念（Node、Replication Controller、Service）等�
  - etcd Server:该进程并不是必选项，一般而言我们默认使用etcd服务来保存资源对象的数据。
 
 ## Node
-Kubernetes集群中，其他节点统称为Node节点。
+Kubernetes集群中，其他节点统称为Node节点。Master和Node可以是物理主机也可以是虚拟主机。在Kubernetes集群中，Node节点是负责工作负载 的主体。在Node节点上，一般会运行着以下进程：
+ - kubelet:负责Pod对应的容器的创建、启动、停止等工作，与Master协作，实现
