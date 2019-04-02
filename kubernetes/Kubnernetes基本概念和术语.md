@@ -45,5 +45,6 @@ tier notin (frontend, backend):匹配所有Label中不包含tier=frontend和tier
 ```
 Label Selector还可以通过组合实现更复杂的查询，每个查询条件使用“,”进行分割，代表的是逻辑与(&&)的关系。比如：
 ```python
-name=mysql,env!=development:代表；中name=mysql
+name=mysql,env!=development:代表Label中包含name=mysql，不包含env=development的资源对象
 ```
+
