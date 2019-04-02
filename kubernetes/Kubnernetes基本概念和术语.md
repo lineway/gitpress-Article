@@ -53,5 +53,6 @@ Label Selector的作用主要体现在以下几个方面：
  - 通过对某些node定义Label，通过kube-scheduler定向的将pod调度到某些node上。
 通过使用Label和Label Selector，可以更方便的实现对资源对象的精细化管理，以及实现集群的高可用性。
 
-## Replication Controller
+## Replication Controller(RC)
+
 
