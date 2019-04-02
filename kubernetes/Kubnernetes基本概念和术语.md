@@ -15,4 +15,4 @@ Kubernetes集群中，其他节点统称为Node节点。Master和Node可以是�
  - Container Engine:容器引擎，这里可以选择Docker或者kubernetes支持的容器引擎，一般我们选择Docker Engine。
 
 Node节点可以动态的增加到kubernetes集群中，也就是说，如果我们为一台主机安装完成了Node节点所需要的服务并且正常开启，那么这一台节点可以随时添加到正在运行的kuberntes集群中。
-
+Node加入到集群中后，节点上的kubelet进程会将Node节点上的
