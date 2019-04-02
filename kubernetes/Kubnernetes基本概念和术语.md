@@ -10,4 +10,9 @@ kubernetes中的大部分概念（Node、Replication Controller、Service）等�
 
 ## Node
 Kubernetes集群中，其他节点统称为Node节点。Master和Node可以是物理主机也可以是虚拟主机。在Kubernetes集群中，Node节点是负责工作负载 的主体。在Node节点上，一般会运行着以下进程：
- - kubelet:负责Pod对应的容器的创建、启动、停止等工作，与Master协作，实现
+ - kubelet:负责Pod对应的容器的创建、启动、停止等工作，与Master协作，实现集群管理的功能；
+ - kube-proxy:该进程主要负责通信及负载均衡机制；
+ - Container Engine:容器引擎，这里可以选择Docker或者kubernetes支持的容器引擎，一般我们选择Docker Engine。
+
+Node节点可以动态的增加到kubernetes集群中，也就是说，如果我们为一台
+
