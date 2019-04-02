@@ -19,4 +19,4 @@ Node加入到集群中后，节点上的kubelet进程会定时的将Node节点�
 在Master节点上，我们可以使用`kubectl get nodes`命令来查看集群中的节点数量及状态，使用`kubectl describe node <node_name>`来查看指定节点的详细信息。
 
 ## Pod
-Pod是
+Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最小单元就是Pod。但是，在一个Pod中可以包含一个或多个容器，其中有一个`pause`的容器比较特殊，这个容器是kuberntes平台的一部分。除了`pause`容器外，每个Pod一般还包含一个或多个用户的业务容器。
