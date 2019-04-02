@@ -41,6 +41,6 @@ environment != development:匹配所有Label中不具有environment=development�
 
 基于集合的Label Selector
 name in (redis-master, redis-salve):匹配所有Label包含name=redis-master和name=redis-slave的资源对象；
-
+tier notin (frontend, backend):匹配所有
 
 ```
