@@ -30,4 +30,5 @@ Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最
 Pod可以设置资源限制，用以限制Pod对Node节点上计算资源的使用。在kubernetes中，对于计算资源的限制需要设置两个参数：Requests和Limits，其中Requests表示资源的最小申请量，Limits表示Pod可以使用该资源最大的量，如果Pod申请的资源超过这个限制，那么kubernetes会杀掉该Pod进程并且重启。  
 
 ## Label
-在Kubernetes中，Label(标签)是附加在资源对象上的一个键-值(key=value)对，key和value都由用户定义。Label与我们日常描述的“标签”大体上相同。给某个资源打上Label就是
+在Kubernetes中，Label(标签)是附加在资源对象上的一个键-值(key=value)对，key和value都由用户定义。Label与我们日常描述的“标签”大体上相同。给资源对象附加上Label有助于用户进行资源分配、调度、配置、部署等管理工作。  
+一个资源对象可以添加任意数量的Label，同样，一个Label也可以附加在任意数量的资源对象上。通过这种方式，可以实现资源的多维度管理工作。给资源对象附加Label可以在资源对象定义时确定，也可以在资源对象
