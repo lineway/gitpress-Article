@@ -20,5 +20,7 @@ Node加入到集群中后，节点上的kubelet进程会定时的将Node节点�
 
 ## Pod
 Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最小单元就是Pod。但是，在一个Pod中可以包含一个或多个容器，其中有一个`pause`的容器比较特殊，这个容器是kuberntes平台的一部分。除了`pause`容器外，每个Pod一般还包含一个或多个用户的业务容器。
+
 在kuberntes中，Pod包含了一组容器单元，这一组容器往往在业务上联系紧密。如果单单使用Docker的话，我们需要编写一个compose文件，将这些容器联系起来，但是，在使用了kuberntes进行编排后，我们就可以将这些容器放在一个Pod中，用户的业务容器可以共享`pause`容器的IP、挂载的Volume等，这样就解决了业务容器之间通信及文件共享的问题。另外，对于在同一个Pod的业务容器而言，我们不需要监控每个容器的运行状态，kubernetes只需要监控`pause`容器的状态，以它的状态代表这个Pod中容器的状态。
+
 在实际的使用中，kubernetes为每个Pod都分配了一个唯一的IP地址，称为PodIP，每个Pod中的容器都共享这个PodIP，通过`虚拟二层网络技术(Flannel、Openvswitch)`，同一kubernetes集群中，Pod之间可以跨越主机进行通信。
