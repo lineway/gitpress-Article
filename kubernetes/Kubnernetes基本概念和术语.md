@@ -38,6 +38,6 @@ Pod可以设置资源限制，用以限制Pod对Node节点上计算资源的使�
 基于等式的Label Selector
 name = mysql:匹配所有具有Label为name=mysql的资源对象
 environment != development:匹配所有Label中不具有environment=development的资源对象
-
+基于
 
 ```
