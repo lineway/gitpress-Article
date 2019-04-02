@@ -43,4 +43,7 @@ environment != development:匹配所有Label中不具有environment=development�
 name in (redis-master, redis-salve):匹配所有Label包含name=redis-master和name=redis-slave的资源对象
 tier notin (frontend, backend):匹配所有Label中不包含tier=frontend和tier=backend的资源对象
 ```
-Label Selector还可以通过组合实现更复杂的查询，每个查询条件使用“,”进行分割，代表的是逻辑与(&&)的关系。
+Label Selector还可以通过组合实现更复杂的查询，每个查询条件使用“,”进行分割，代表的是逻辑与(&&)的关系。比如：
+```python
+name=mysql,env!=development:代表；中name=mysql
+```
