@@ -40,6 +40,7 @@ name = mysql:匹配所有具有Label为name=mysql的资源对象
 environment != development:匹配所有Label中不具有environment=development的资源对象
 
 基于集合的Label Selector
-name in (redis)
+name in (redis-master, redis-salve):匹配所有Label包含name=redis-master和name=redis-slave的资源对象；
+
 
 ```
