@@ -20,3 +20,5 @@ Node加入到集群中后，节点上的kubelet进程会定时的将Node节点�
 
 ## Pod
 Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最小单元就是Pod。但是，在一个Pod中可以包含一个或多个容器，其中有一个`pause`的容器比较特殊，这个容器是kuberntes平台的一部分。除了`pause`容器外，每个Pod一般还包含一个或多个用户的业务容器。
+
+在kuberntes中，Pod包含了一组容器单元，这一组容器往往在业务上联系紧密。如果单单使用Docker的话，我们需要编写一个compose文件，将这些容器联系起来，但是，在使用了kuberntes进行编排后，我们就可以将这些容器放在一个Pod中，
