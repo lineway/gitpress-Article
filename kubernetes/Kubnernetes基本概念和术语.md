@@ -27,4 +27,7 @@ Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最
 ### Pod分类
 实际上Pod细分下来还可以分为：普通的Pod和静态Pod两种类型。静态Pod比较特殊，它并不存放在集群的etcd存储里，而是放在某个具体的Node上的一个具体文件中，并且只能在这个Node上运行。静态Pod被节点上的kubelet进程直接管理，kubelet通过kubernetes API服务为每个静态pod创建镜像，这些pod对于API服务是可见的，但是不受API服务控制。  
 如果确实需要在集群中使用静态pod的话，我们应该考虑DaemonSet的方式。  
-Pod可以设置资源限制，用以限制Pod对Node节点上计算资源的使用。在kubernetes中，对于计算资源的限制需要设置两个参数：Requests和Limits，其中Requests表示资源的最小申请量，Limits表示Pod可以使用该
+Pod可以设置资源限制，用以限制Pod对Node节点上计算资源的使用。在kubernetes中，对于计算资源的限制需要设置两个参数：Requests和Limits，其中Requests表示资源的最小申请量，Limits表示Pod可以使用该资源最大的量，如果Pod申请的资源超过这个限制，那么kubernetes会杀掉该Pod进程并且重启。  
+
+## Label
+在Kubernetes中，Label是一个较为核心的概念，
