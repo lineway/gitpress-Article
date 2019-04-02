@@ -47,4 +47,4 @@ Label Selector还可以通过组合实现更复杂的查询，每个查询条件
 ```python
 name=mysql,env!=development:代表Label中包含name=mysql，不包含env=development的资源对象
 ```
-
+Label Selector的作用
