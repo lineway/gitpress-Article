@@ -25,4 +25,5 @@ Pod是kubernetes集群中一个基本的概念，kubernetes集群能调度的最
 
 在实际的使用中，kubernetes为每个Pod都分配了一个唯一的IP地址，称为PodIP，每个Pod中的容器都共享这个PodIP，通过`虚拟二层网络技术(Flannel、Openvswitch)`，同一kubernetes集群中，Pod之间可以跨越主机进行通信。
 ### Pod分类
-实际上Pod细分下来还可以分为：普通的Pod和静态Pod两种类型。静态Pod比较特殊，它并不存放在集群的etcd存储里，而是放在某个具体的Node上的一个具体文件中，并且只能在这个Node上运行。静态Pod被节点上的kubelet进程直接管理，
+实际上Pod细分下来还可以分为：普通的Pod和静态Pod两种类型。静态Pod比较特殊，它并不存放在集群的etcd存储里，而是放在某个具体的Node上的一个具体文件中，并且只能在这个Node上运行。静态Pod被节点上的kubelet进程直接管理，kubelet通过kubernetes API服务为每个静态pod创建镜像，这些pod对于API服务是可见的，但是不受API服务控制。
+如果确实需要在集群中使用静态pod的话，我们应该考虑DaemonSet的方式。
