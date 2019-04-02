@@ -49,4 +49,5 @@ name=mysql,env!=development:代表Label中包含name=mysql，不包含env=develo
 ```
 Label Selector的作用主要体现在以下几个方面：
  - kube-controller进程通过资源对象RC上定义的Label Selector来筛选要监控的pod副本数量；
- - kube-proxy进程通过Service的Label Selector
+ - kube-proxy进程通过Service的Label Selector来选择对应的pod，自动建立起每个Service到对应pod的请求转发路由；
+ - 通过对某些node定义Label，
