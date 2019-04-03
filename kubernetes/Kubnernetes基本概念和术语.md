@@ -55,4 +55,122 @@ Label Selector的作用主要体现在以下几个方面：
 
 ## Replication Controller(RC)
 
+对于Replication Controller的官方解释是，Replication Controller确保一次运行指定数量的pod，确保一个pod或一组同类的pod总是可用的。我们可以理解为，Replication Controller对pod的运行进行了定义，一旦pod不符合这个定义，就进行相应的调整。
+
+那么我们在定义一个Replication Controller的时候，需要定义哪些内容呢？一般而言，我们需要包含以下信息：
+
+- Pod的副本数量（replicas）；
+- 用于选择目标pod的Label Selector；
+- 创建新pod使用的模板（template）。
+
+以下是一个Replication Controller的定义文件：
+
+```yaml
+apiVersion: v1
+kind: ReplicationController
+metadata:
+    name: nginx
+spec:
+    replicas: 3
+    selector:
+        app: nginx
+    template:
+        metadata:
+            name: nginx
+            labels:
+                app: nginx
+... ...
+```
+
+上述文件中，`kind`声明了该配置文件是一个`ReplicationController`，文件中包含了之前提到的内容，`replicas`定义了pod的数量，`selector`定义了Label Selector，`template`中定义了创建新pod使用的模板。
+
+当定义的RC提交到kubernetes集群以后，Master节点上的Controller Manager会定期的在集群中巡检pod，如果发现pod数量与RC中定义的数量不符合时，就会删除多余的pod或者创建新的pod以保证集群中pod的数量与RC中定义的数量一致。这就实现了集群的高可用性。**如果可能的话，即使创建单个pod，我们也尽可能的使用Replication Controller的方式**。当然，在运行时，我们也可以通过命令修改RC的replicas参数，动态的调整pod的数量来实现缩放（scaling），这可以通过`kubectl scale`命令来实现，如：
+
+```bash
+kubectl scale rc nginx --replicas=5
+```
+
+使用上述命令对pod进行缩放后，可以在集群中查看pod数量是否与修改后的数量一致。
+
+对于RC中定义的pod，在删除的时候，首先将RC中的`replicas`数量设置为0，然后更新该RC，也可以通过`kubectl`提供的`stop`和`delete`命令来删除RC和RC中定义的pod。
+
+### 滚动升级
+
+由于RC的存在，当我们在切换集群中某类pod中的Docker镜像的时候，不是一次性完成镜像的更换，而是逐步更换镜像，保持集群中总的pod数量是不变的，当所有的pod中的镜像完成更换后，升级完成。这种方式称为滚动升级（Rolling Update）。
+
+### Replica Set
+
+在新版本的kubernetes中，Replication Controller升级为一个新的概念----ReplicaSet，相比于Replication Controller而言，ReplicateSet增加了基于集合的Label Selector（Set-based selector），RC只支持基于等式的Label Selector（equality-based selector）。
+
+我们来看一个官方的ReplicaSet的例子：
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+    tier: frontend
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: frontend
+    matchExpressions:
+      - {key: tier, operator: In, values: [frontend]}
+  template:
+    metadata:
+      labels:
+        tier: frontend
+    spec:
+      containers:
+      - name: php-redis
+        image: gcr.io/google_samples/gb-frontend:v3
+
+```
+
+其中`matchExpressions`下的条件`{key: tier, operator: In, values: [frontend]}`就是定义的匹配条件及`matchLabel`用于查找详细信息的操作。
+
+对于RS(Replica Set)来说，`kubectl`中可用于RC的命令大部分都适用，比如我们可以使用`kubectl get rs`来查看RS的信息。
+
+但是，实际上我们很少会单独使用Replica Set，其主要是被Deployment这个资源对象使用，Deployment管理Replica Set并为pod提供更新及其他功能。也就是说，除非需要自定义编排，我们没有必要直接操作Replica Set，而是直接使用Deployment。
+
+## Deployment
+
+实际上，Deployment是一个高级的、升级版的Replication Controller。相对于RC来说，Deployment可以方便的直到当前pod的部署进度。
+
+Deployment的典型使用场景有以下几个方面：
+
+- 创建一个Deployment对象来生成对应的Replica Set并完成pod副本的创建过程；
+- 更新Deployment以创建新的Pod（如镜像升级）；
+- 回滚到之前的Deployment版本；
+- 扩展Deployment以应对更多负载；
+- 清除不在需要的Replica Sets；
+- 挂起或恢复一个Deployment；
+- 检查Deployment的状态以确定部署是否完成；
+
+Deployment的定义与Replica Set的定义很相似，区别仅限于API声明及kind类型：
+
+```yaml
+apiVersion: apps/v1beta1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+```
+
+完成一个Deployment的编写后，使用`kubectl create -f <deployment-file>.yaml`来创建一个Deploymnet，使用`kubectl get deployments`命令来查看Deployment的信息。
 
