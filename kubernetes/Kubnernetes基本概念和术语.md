@@ -172,5 +172,11 @@ spec:
         - containerPort: 80
 ```
 
-完成一个Deployment的编写后，使用`kubectl create -f <deployment-file>.yaml`来创建一个Deploymnet，使用`kubectl get deployments`命令来查看Deployment的信息。
+完成一个Deployment的编写后，使用`kubectl create -f <deployment-file>.yaml`来创建一个Deploymnet，使用`kubectl get deployments`命令来查看Deployment的信息。，如果想查看更信息的扩展信息，可以使用`kubectl describe deployments`来查看输出结果。
+
+## Service
+
+kubernetes的Service定义了一种抽象对象，即逻辑上的一组Pod和一种可以访问它们的策略——微服务。这一组Pod能够被Service访问到，通常是通过Label Selector实现的。
+
+对于Serivce来说，对接的一组Pod中，每个Pod在kubernetes中都会被分配一个独立的IP地址，并且每个Pod都有单独的Endpoint对外提供服务。因此，Service对外提供服务的时候，是需要在这组Pod组成的集群中添加一个负载均衡器，将这一组的Pod的Endpoint列表加入到负载均衡器的端口转发列表中。这样以来，外部客户端通过访问负载均衡器的对外IP地址和端口就可以访问Service，最后外部客户端的请求具体转发到哪一个Pod中则是由负载均衡器的算法分配的。
 
