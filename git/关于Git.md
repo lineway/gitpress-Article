@@ -65,6 +65,16 @@ git config --global user.email "<user_email@expample.com>"
 
 默认情况下，git会使用操作系统中默认的文本编辑器，在大多是Linux发行版上是Vim。如果需要修改文本编辑器，可以使用`git config --global core.editor emacs`，这样一来，git的默认文本编辑器就换成了Emacs。
 
+### git命令别名
+
+在使用git的时候，我们会经常用到诸如`checkout`等命令，通过配置，我们可以将这些命令设置一些别名进行简化，如:
+
+```bash
+git config --global alias.co checkout
+```
+
+通过上述配置，我们为`checkout`设置了别名`co`，然后就可以通过`git co`来执行原本的`git checkout`命令。
+
 ### 查看配置信息
 
 使用`git config --list`可以查看当前环境下git的配置信息，当然也可以查看配置文件的内容来获取相关配置信息。
