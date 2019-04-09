@@ -178,5 +178,33 @@ spec:
 
 kubernetes的Service定义了一种抽象对象，即逻辑上的一组Pod和一种可以访问它们的策略——微服务。这一组Pod能够被Service访问到，通常是通过Label Selector实现的。
 
-对于Serivce来说，对接的一组Pod中，每个Pod在kubernetes中都会被分配一个独立的IP地址，并且每个Pod都有单独的Endpoint对外提供服务。因此，Service对外提供服务的时候，是需要在这组Pod组成的集群中添加一个负载均衡器，将这一组的Pod的Endpoint列表加入到负载均衡器的端口转发列表中。这样以来，外部客户端通过访问负载均衡器的对外IP地址和端口就可以访问Service，最后外部客户端的请求具体转发到哪一个Pod中则是由负载均衡器的算法分配的。
+对于Serivce来说，对接的一组Pod中，每个Pod在kubernetes中都会被分配一个独立的IP地址，并且每个Pod都有单独的Endpoint对外提供服务。因此，Service对外提供服务的时候，是需要在这组Pod组成的集群中添加一个负载均衡器，将这一组的Pod的Endpoint列表加入到负载均衡器的端口转发列表中。这样以来，外部客户端通过访问负载均衡器的对外IP地址和端口就可以访问Service，最后外部客户端的请求具体转发到哪一个Pod中则是由负载均衡器的算法分配的。  
+在kubernetes中，运行在每个Node上的kube-proxy就是一个负载均衡器，它主要负责将对Service的请求转发到后端的Pod实例上，并在内部实现服务的负载均衡和会话保持机制。需要注意的是，Service不是共用一个负载均衡器的IP地址，而是每个Service分配了全局唯一的虚拟IP地址，称为ClusterIP。这样一来，每个Service就变成了具备唯一IP地址的端点，服务调用就变成了基本的TCP通信问题。  
+在前面的内容中，我们知道Pod的Endpoint会随着Pod的销毁和重新创建而发生改变。但是，Service一旦创建，kubernetes就自动的分配一个可用的ClusterIP，在整个Service的生命周期内，它的ClusterIP不发生变化，那么我们只要将Service的Name与Service的ClusterIP做一个DNS域名映射，服务发现的问题也就相应的被解决了。  
+在实际应用中，很多服务其实是有多端口的，比如：MySQL、redis等。Service支持多个Endpoint，如果存在多个Endpoint的时候，分别对Endpoint命名进行区分，对于多端口命名的操作，就牵扯服务发现这部分的内容，后续会做详细介绍。  
+### 外部系统访问Service的问题
+在目前介绍的概念中，我们了解到kubernetes中已经存在三种不同的IP，分别是`Node IP`、`Pod IP`和`Cluster IP`。它们的作用分别是：
+ - `Node IP`是集群中每个节点的物理网卡IP地址，这是一个真是存在的物理网络，所有在这个网络中的服务器都可以通过这个网络进行通信，不管它是不是在集群中。这也说明集群之外的节点访问集群内的某个节点或者TCP/IP服务的时候，必须通过Node IP进行通信；
+  - `Pod IP`是每个Pod的IP地址，这是通过docker0网桥的IP地址段进行分配的，通常是一个虚拟的二层网络。因此在集群中，不同的Pod进行通信的时候，就是通过Pod IP所在的虚拟二层网络进行通信的，真实的TCP/IP流量则是通过Node IP所在的物理网卡流出的；
+  - `Cluster IP`是一个虚拟的IP，它仅仅作用于Service对象，并有kubernetes管理和分配IP地址（来源于Cluster IP池），使用ping命令不能连接到Cluster IP，因为没有网络对象进行响应，最后，Cluster IP只能结合Service Port组成一个具体的通信端口，单独的Cluster IP不具备TCP/IP通信的基础。
 
+从上面可以看出，Cluster IP属于kubernetes内部的地址，无法在集群外部直接使用这个地址。为了能够让外部访问Service，可以采用NodePort的方式。具体可以在Service的配置中做如下定义：
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat-service
+spec:
+  type: NodePort
+  ports:
+   - ports: 8080
+     nodePort: 30001
+  selector:
+    tier: frontend
+```
+上述配置信息中，`spec.type`表明指定tomcat-service使用NodePort，`spec.ports.nodePort`定义了其使用的端口为30001，这样以来，在浏览器中通过`http://<nodePort>:30001`就可以访问tomcat了。  
+NodePort的实现实质上是kubernetes集群为Node上需要外部访问的Service开启一个对应的TCP监听端口。  
+#### 负载均衡
+前面介绍的内容解决了集群外部访问Service的主要问题，但是还有负载均衡问题没有得到处理。如下所示：
+![loadbalancer.png](https://i.loli.net/2019/04/09/5cac6390a4160.png)
+我们设置负载均衡独立于kubernetes集群之外，外部请求的流量会首先经过负载均衡器，然后由负载均衡器分配带集群的Node上，实现这个功能可以通过加设硬件负载均衡器或通过HAproxy或nginx的方式来配置流量转发。  
